@@ -3,7 +3,7 @@ window.PptZip = (() => {
   const decoder = new TextDecoder(), encoder = new TextEncoder();
   const crcTable = Array.from({length:256},(_,i)=>{let c=i;for(let j=0;j<8;j++)c=(c&1)?0xedb88320^(c>>>1):c>>>1;return c>>>0});
   function crc32(bytes){let c=0xffffffff;for(const b of bytes)c=crcTable[(c^b)&255]^(c>>>8);return (c^0xffffffff)>>>0}
-  async function read(buffer){
+  async function read(buffer,options={}){
     const bytes=new Uint8Array(buffer),view=new DataView(buffer);let end=-1;
     for(let i=bytes.length-22;i>=Math.max(0,bytes.length-65557);i--)if(view.getUint32(i,true)===0x06054b50){end=i;break}
     if(end<0)throw new Error('PPTX ZIP 형식을 읽을 수 없습니다.');
@@ -11,7 +11,7 @@ window.PptZip = (() => {
     for(let i=0;i<total;i++){
       if(view.getUint32(p,true)!==0x02014b50)throw new Error('손상된 ZIP 목록입니다.');
       const method=view.getUint16(p+10,true),size=view.getUint32(p+20,true),rawSize=view.getUint32(p+24,true),nl=view.getUint16(p+28,true),el=view.getUint16(p+30,true),cl=view.getUint16(p+32,true),offset=view.getUint32(p+42,true);
-      unpacked+=rawSize;if(unpacked>100*1024*1024)throw new Error('압축 해제 용량이 너무 큽니다. 100MB 이하 파일을 사용하세요.');
+      const entryName=decoder.decode(bytes.subarray(p+46,p+46+nl));if(options.filter&&!options.filter(entryName)){p+=46+nl+el+cl;continue}unpacked+=rawSize;if(unpacked>100*1024*1024)throw new Error('압축 해제 용량이 너무 큽니다. 100MB 이하 파일을 사용하세요.');
       const name=decoder.decode(bytes.subarray(p+46,p+46+nl)),dataStart=offset+30+view.getUint16(offset+26,true)+view.getUint16(offset+28,true),compressed=bytes.slice(dataStart,dataStart+size);let data;
       if(method===0)data=compressed;else if(method===8){
         if(!window.DecompressionStream)throw new Error('최신 Chrome 또는 Edge에서 이용해주세요.');
