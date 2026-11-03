@@ -38,7 +38,7 @@ const teachingWeek={
  {period:'5',subject:'미술',topic:'로봇 디자인하기 (2/2)',pages:'58쪽',query:'로봇',tokens:['로봇']},
  {period:'6',subject:'미술',topic:'디자인 작품 감상하기',pages:'59쪽',query:'디자인',tokens:['디자인']}],
  '2026-11-04':[
- {period:'1',subject:'국어',topic:'신뢰성 있는 뉴스 만들기 (1/2)',pages:'168~171쪽',query:'뉴스',tokens:['뉴스'],prep:'뉴스 주제·출처·역할 분담'},
+ {period:'1',subject:'국어',topic:'여러 가지 매체 자료에 담긴 관점 파악하기',pages:'164~169쪽 · 매체 5~6차시',query:'관점',tokens:['매체','관점'],prep:'꿈꾸는 안쌤 PPT · 주간안내에서 실제 진도로 조정'},
  {period:'2',subject:'사회',topic:'조선과 주변 나라들의 관계를 알아볼까요',pages:'90~93쪽 · 2단원 7차시',query:'주변나라',tokens:['조선','주변'],official:[{label:'활동지',url:'https://download.i-scream.co.kr/data/files/2026_files/활동지_sah_502_0201_0007.hwp'},{label:'교수학습과정안',url:'https://download.i-scream.co.kr/data/files/2026_files/5-2_사회_2단원_7차시_교수학습과정안.hwp'}],prep:'활동지 인쇄·관계 지도 확인'},
  {period:'3',subject:'영어',topic:'10. Where is the bookstore? ⑦ · 받아쓰기·복습 게임',pages:'158~159쪽',query:'bookstore',tokens:['bookstore'],prep:'받아쓰기·복습 게임 자료'},
  {period:'4',subject:'수학',topic:'(자연수) × (소수)를 알아볼까요 (2)',pages:'92~93쪽',query:'소수',tokens:['자연수','소수'],prep:'계산 원리·연습 문제'},
