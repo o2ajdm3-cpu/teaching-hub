@@ -95,7 +95,26 @@ function renderLibrary(){
  '<div class="result-info" style="margin-top:20px">'+items.length.toLocaleString()+'개 자료 · '+allCounts.size+'개 묶음 · 이름·폴더 기반 분류</div>'+
  (items.length?[...groups].map(([key,files])=>'<details class="library-group" open><summary>'+esc(key)+' <span>'+allCounts.get(key)+'개'+(allCounts.get(key)>files.length?' · 현재 페이지 '+files.length+'개':'')+'</span></summary><div class="library-list">'+files.map(organizedRow).join('')+'</div></details>').join(''): '<section class="panel">'+(catalog.length?'<div class="empty">조건에 맞는 자료가 없습니다. 필터를 초기화해 보세요.</div>':empty())+'</section>')+
  (items.length>35?'<div class="pagination"><button class="button secondary" data-paginate="-1" '+(pageNum===1?'disabled':'')+'>이전</button>'+pageNum+' / '+totalPages+'<button class="button secondary" data-paginate="1" '+(pageNum===totalPages?'disabled':'')+'>다음</button></div>':'');
- $('#search').addEventListener('input',e=>{let pos=e.target.selectionStart;search=e.target.value;pageNum=1;renderLibrary();$('#search').focus();$('#search').setSelectionRange(pos,pos)});$('#type-filter').onchange=e=>{type=e.target.value;pageNum=1;renderLibrary()};
+ const searchInput=$('#search');
+ let composing=false;
+ const updateSearch=()=>{
+   if(search===searchInput.value)return;
+   const {selectionStart,selectionEnd}=searchInput;
+   search=searchInput.value;
+   pageNum=1;
+   renderLibrary();
+   const nextInput=$('#search');
+   nextInput.focus();
+   nextInput.setSelectionRange(selectionStart,selectionEnd);
+ };
+ searchInput.addEventListener('compositionstart',()=>{composing=true});
+ searchInput.addEventListener('compositionend',()=>{
+   composing=false;
+   queueMicrotask(()=>{if(searchInput.isConnected)updateSearch()});
+ });
+ searchInput.addEventListener('input',event=>{
+   if(!composing&&!event.isComposing)updateSearch();
+ });$('#type-filter').onchange=e=>{type=e.target.value;pageNum=1;renderLibrary()};
  for(const [id,set] of [['subject-filter',v=>{subjectFilter=v;unitFilter='전체 단원'}],['grade-filter',v=>gradeFilter=v],['semester-filter',v=>semesterFilter=v],['unit-filter',v=>unitFilter=v],['date-basis',v=>dateBasis=v]])if($('#'+id))$('#'+id).onchange=e=>{set(e.target.value);pageNum=1;renderLibrary()};
  $('#reset-organize').onclick=()=>{subjectFilter='전체 과목';gradeFilter='전체 학년';semesterFilter='전체 학기';unitFilter='전체 단원';category='전체';search='';type='전체 형식';pageNum=1;renderLibrary()};
 }
